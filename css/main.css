@@ -15,7 +15,7 @@ body {
 }
 .lm_header {
 	height: 50px !important;
-	background-color: white;
+	background-color: red;
 }
 .lm_header .lm_tabs  .lm_tab .lm_title{
 	display: none;

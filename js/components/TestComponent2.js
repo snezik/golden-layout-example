@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 
-// Pure react component. Should not be connected to redux store; its container
-// should be connected to the store.
 export class TestComponent2 extends React.Component {
 	render() {
 		return (
-			<h1>{this.props.label}</h1>
+			<button onClick={() => this.props.incrementCount()}>Increment Count</button>
 		);
 	}
 }
@@ -16,10 +14,13 @@ TestComponent2.PropTypes = {
 	label: PropTypes.string.isRequired
 };
 
-// function mapStateToProps(state) {
-// 	return {
-// 		label: state.get('count')
-// 	}
-// }
+function mapDispatchToProps(dispatch) {
+	return {
+		incrementCount: () => dispatch(incrementCount())
+	};
+}
 
-// export const TestComponentContainer = connect(mapStateToProps)(TestComponent);
+export const IncrementButtonContainer = connect(
+	null,
+	mapDispatchToProps
+)(TestComponent2);

@@ -1,15 +1,16 @@
 import React from 'react';
+import {Provider} from 'react-redux';
 import GoldenLayout from 'golden-layout';
 import {TestComponentContainer} from "./TestComponentContainer";
-import {TestComponent2} from "./TestComponent2";
+import {IncrementButtonContainer} from "./TestComponent2";
 import {TestComponent3} from "./TestComponent3";
 
-export class GoldenLayoutWrapper extends React.Component {
+class GoldenLayoutWrapper extends React.Component {
 
 	componentDidMount() {
 		const config = {
 			settings: {
-				hasHeaders: false,
+				hasHeaders: true,
 				showCloseIcon: true
 			},
 			content: [{
@@ -20,21 +21,23 @@ export class GoldenLayoutWrapper extends React.Component {
 					props: { label: 'A' }
 				}, {
 					type: 'react-component',
-					component: 'TestComponent2',
+					component: 'IncrementButtonContainer',
 					props: { label: 'B' },
 				}, {
 					type: 'react-component',
 					component: 'TestComponent3',
-					props: { label: 'C' }
+					props: { label: 'dhsgflkjdsglgkjhdslkgj' }
 				}]
 			}]
 		};
 
-		function wrapComponent(Component) {
+		function wrapComponent(Component, store) {
 			class Wrapped extends React.Component {
 				render() {
 					return (
-						<Component {...this.props}/>
+						<Provider store={store}>
+							<Component {...this.props}/>
+						</Provider>
 					);
 				}
 			}
@@ -46,13 +49,14 @@ export class GoldenLayoutWrapper extends React.Component {
 		layout.registerComponent('TestComponentContainer',
 			wrapComponent(TestComponentContainer)
 		);
-		layout.registerComponent('TestComponent2',
-			wrapComponent(TestComponent2)
+		layout.registerComponent('IncrementButtonContainer',
+			wrapComponent(IncrementButtonContainer, this.context.store)
 		);
 		layout.registerComponent('TestComponent3',
 			wrapComponent(TestComponent3)
 		);
-		console.log('LAYOUTS', layout);
+		console.log('CONTEXT', this.context);
+		debugger
 		layout.init();
 
 		window.addEventListener('resize', () => {
@@ -66,3 +70,8 @@ export class GoldenLayoutWrapper extends React.Component {
 			);
 		}
 };
+// GoldenLayoutWrapper.contextTypes = {
+// 	store: React.PropTypes.object
+// };
+
+export default GoldenLayoutWrapper
