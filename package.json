@@ -1,0 +1,46 @@
+{
+  "name": "golden-layout-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --open --mode=development",
+    "dev": "webpack-dev-server --config ./webpack.config.js --mode development",
+    "build": "webpack"
+  },
+  "author": "Kyryl Makarchuk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snezik/golden-layout-example.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/snezik/golden-layout-example/issues"
+  },
+  "homepage": "https://github.com/snezik/golden-layout-example#readme",
+  "dependencies": {
+    "golden-layout": "^1.5.9",
+    "prop-types": "^15.6.1",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.48",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.48",
+    "@babel/preset-env": "^7.0.0-beta.48",
+    "@babel/preset-react": "^7.0.0-beta.48",
+    "babel-loader": "^8.0.0-beta.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.11",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.8.3",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.20.3",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "^3.1.4"
+  }
+}
