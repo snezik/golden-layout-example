@@ -13,21 +13,25 @@ body {
 .goldenLayout {
 	height: 100vh;
 }
-.lm_header {
-	height: 50px !important;
-	background-color: red;
+.clock {
+	color: white;
+	font-size: 20px;
 }
-.lm_header .lm_tabs  .lm_tab .lm_title{
-	display: none;
-}
-.lm_header .lm_tabs  .lm_tab{
-	width: 100px;
-	height: 50px;
-	background: url("../images/move.jpg") left top / 50% no-repeat;
-	box-shadow: none;
-	padding: 0;
-	margin: 0;
-}
-.lm_header .lm_tabs {
-	height: 50px;
-}
+/*.lm_header {*/
+	/*height: 50px !important;*/
+	/*background-color: red;*/
+/*}*/
+/*.lm_header .lm_tabs  .lm_tab .lm_title{*/
+	/*display: none;*/
+/*}*/
+/*.lm_header .lm_tabs  .lm_tab{*/
+	/*width: 100px;*/
+	/*height: 50px;*/
+	/*background: url("../images/move.jpg") left top / 50% no-repeat;*/
+	/*box-shadow: none;*/
+	/*padding: 0;*/
+	/*margin: 0;*/
+/*}*/
+/*.lm_header .lm_tabs {*/
+	/*height: 50px;*/
+/*}*/

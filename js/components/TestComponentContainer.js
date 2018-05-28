@@ -12,7 +12,7 @@ export class TestComponentContainer extends React.Component {
 	}
 }
 
-TestComponentContainer.PropTypes = {
+TestComponentContainer.propTypes = {
 	label: PropTypes.string.isRequired
 };
 

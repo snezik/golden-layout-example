@@ -2,9 +2,11 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import GoldenLayout from 'golden-layout';
 import {TestComponentContainer} from "./TestComponentContainer";
-import {IncrementButtonContainer} from "./TestComponent2";
+import {TestComponent2} from "./TestComponent2";
 import {TestComponent3} from "./TestComponent3";
-
+import createReactContext from 'react'
+import {connect} from 'react-redux';
+export const WrapperContext = React.createContext({test:'test'});
 class GoldenLayoutWrapper extends React.Component {
 
 	componentDidMount() {
@@ -21,7 +23,7 @@ class GoldenLayoutWrapper extends React.Component {
 					props: { label: 'A' }
 				}, {
 					type: 'react-component',
-					component: 'IncrementButtonContainer',
+					component: 'TestComponent2',
 					props: { label: 'B' },
 				}, {
 					type: 'react-component',
@@ -31,13 +33,13 @@ class GoldenLayoutWrapper extends React.Component {
 			}]
 		};
 
-		function wrapComponent(Component, store) {
+		function wrapComponent(Component) {
 			class Wrapped extends React.Component {
 				render() {
 					return (
-						<Provider store={store}>
+						<WrapperContext.Provider store = {this}>
 							<Component {...this.props}/>
-						</Provider>
+						</WrapperContext.Provider>
 					);
 				}
 			}
@@ -45,28 +47,70 @@ class GoldenLayoutWrapper extends React.Component {
 			return Wrapped;
 		};
 
-		let layout = new GoldenLayout(config, this.layout);
-		layout.registerComponent('TestComponentContainer',
+		// function addMenuItem( text ) {
+		// 	debugger
+		//
+		// 	//
+		//
+		// 	//insertion code will go here
+		// };
+
+
+
+		let savedState = localStorage.getItem( 'savedState' );
+
+		if( savedState !== null ) {
+			this.layout = new GoldenLayout( JSON.parse( savedState ),this.layouts );
+		} else {
+			this.layout = new GoldenLayout( config, this.layouts );
+		}
+		// this.layout = new GoldenLayout(config, this.layouts);
+		this.layout.registerComponent('TestComponentContainer',
 			wrapComponent(TestComponentContainer)
 		);
-		layout.registerComponent('IncrementButtonContainer',
-			wrapComponent(IncrementButtonContainer, this.context.store)
+		this.layout.registerComponent('TestComponent2',
+			wrapComponent(TestComponent2,)
 		);
-		layout.registerComponent('TestComponent3',
+		this.layout.registerComponent('TestComponent3',
 			wrapComponent(TestComponent3)
 		);
 		console.log('CONTEXT', this.context);
-		debugger
-		layout.init();
+		this.layout.init();
 
-		window.addEventListener('resize', () => {
-			layout.updateSize();
+		function addMenuItem(text, layout) {
+			let el = $( '<li>' + text + '</li>' );
+			$( '#menuContainer' ).append( el );
+			let newItemConfig = {
+				type: 'react-component',
+				component: 'TestComponent2',
+				componentState: { text: text }
+			};
+			layout.createDragSource( el, newItemConfig );
+		}
+
+		this.layout.on('stateChanged', (e) => {
+			console.log(this.layout.toConfig())
 		});
+
+		addMenuItem( 'User added component A', this.layout );
+		// addMenuItem( 'User added component B' ).bind(this);
+
 	}
-	render()
-		{
+	saveStatus(){
+		let state = JSON.stringify(
+			this.layout.toConfig() );
+		localStorage.setItem( 'savedState', state );
+
+	}
+	render(){
+			const {store} = this.props;
 			return (
-				<div className='goldenLayout' ref={input => this.layout = input}/>
+				<div className="container">
+					<ul id="menuContainer"></ul>
+					<button onClick={this.saveStatus.bind(this)}>Save layout</button>
+					<div className='goldenLayout' ref={input => {this.layouts = input}}/>
+				</div>
+
 			);
 		}
 };
@@ -74,4 +118,11 @@ class GoldenLayoutWrapper extends React.Component {
 // 	store: React.PropTypes.object
 // };
 
-export default GoldenLayoutWrapper
+function mapStateToProps(state) {
+	return {
+		store: state
+	}
+}
+
+export default GoldenLayoutWrapper = connect(mapStateToProps)(GoldenLayoutWrapper);
+// export default GoldenLayoutWrapper
