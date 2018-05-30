@@ -13,23 +13,27 @@ class GoldenLayoutWrapper extends React.Component {
 		const config = {
 			settings: {
 				hasHeaders: true,
-				showCloseIcon: true
+				showCloseIcon: true,
+				popoutWholeStack: true,
+				blockedPopoutsThrowError: true
 			},
 			content: [{
-				type: 'row',
-				content: [{
-					type: 'react-component',
-					component: 'TestComponentContainer',
-					props: { label: 'A' }
-				}, {
-					type: 'react-component',
-					component: 'TestComponent2',
-					props: { label: 'B' },
-				}, {
-					type: 'react-component',
-					component: 'TestComponent3',
-					props: { label: 'dhsgflkjdsglgkjhdslkgj' }
-				}]
+				type: 'column',
+				content: [
+					{
+						type: 'react-component',
+						component: 'TestComponentContainer',
+						props: { label: 'A' }
+					}, {
+						type: 'react-component',
+						component: 'TestComponent2',
+						props: { label: 'B' }
+					}, {
+						type: 'react-component',
+						component: 'TestComponent3',
+						props: { label: 'dhsgflkjdsglgkjhdslkgj' }
+					}
+				]
 			}]
 		};
 
@@ -46,15 +50,6 @@ class GoldenLayoutWrapper extends React.Component {
 
 			return Wrapped;
 		};
-
-		// function addMenuItem( text ) {
-		// 	debugger
-		//
-		// 	//
-		//
-		// 	//insertion code will go here
-		// };
-
 
 
 		let savedState = localStorage.getItem( 'savedState' );
@@ -74,11 +69,11 @@ class GoldenLayoutWrapper extends React.Component {
 		this.layout.registerComponent('TestComponent3',
 			wrapComponent(TestComponent3)
 		);
-		console.log('CONTEXT', this.context);
+
 		this.layout.init();
 
 		function addMenuItem(text, layout) {
-			let el = $( '<li>' + text + '</li>' );
+			let el = $( '<li class="block-widget">' + text + '</li>' );
 			$( '#menuContainer' ).append( el );
 			let newItemConfig = {
 				type: 'react-component',
@@ -87,14 +82,69 @@ class GoldenLayoutWrapper extends React.Component {
 			};
 			layout.createDragSource( el, newItemConfig );
 		}
+		this.layout.on('stackCreated', (stack)=> {
+			let label = 'custom open at new window';
 
+			let popout = function() {
+
+				let item = stack.header.activeContentItem;
+
+				let parentId = stack.parent.config.id;
+				let indexInParent = stack.contentItems.findIndex(e => e.config.id == item.config.id);
+
+				stack.removeChild( item, true );
+
+				console.log(this);
+
+				// display_popup(item, parentId, indexInParent, stack);
+
+
+			};
+
+
+			new GoldenLayout.__lm.controls.HeaderButton( stack.header, label, 'lm_popout', popout );
+			let ctrlsCtr = stack.header.controlsContainer[0];
+			let openWinIcon = ctrlsCtr.lastChild;
+			$(openWinIcon).insertBefore(ctrlsCtr.firstChild);
+		}, this);
+		function display_popup(item, parentId, indexInParent, stack){
+			this.layout.createPopout(
+				{
+					type: 'react-component',
+					componentName: 'TestComponent2',
+					props: { label: 'B' },
+					componentState: { text: 'Component 2' }
+				}, {
+					width: 200,
+					height: 300,
+					left: 400,
+					top: 100
+				}
+			);
+		}
 		this.layout.on('stateChanged', (e) => {
-			console.log(this.layout.toConfig())
+			// console.log(this.layout.toConfig())
 		});
 
-		addMenuItem( 'User added component A', this.layout );
+		addMenuItem( 'Add pie chart', this.layout );
 		// addMenuItem( 'User added component B' ).bind(this);
 
+	}
+
+	popupCreated() {
+		this.layout.createPopout(
+			{
+				type: 'react-component',
+				title: 'super title',
+				component: 'TestComponent2',
+				props: { label: 'B' },
+			}, {
+				width: 200,
+				height: 300,
+				left: 400,
+				top: 100
+			}
+		);
 	}
 	saveStatus(){
 		let state = JSON.stringify(
@@ -108,6 +158,7 @@ class GoldenLayoutWrapper extends React.Component {
 				<div className="container">
 					<ul id="menuContainer"></ul>
 					<button onClick={this.saveStatus.bind(this)}>Save layout</button>
+					<button onClick={this.popupCreated.bind(this)}>create popup layout</button>
 					<div className='goldenLayout' ref={input => {this.layouts = input}}/>
 				</div>
 

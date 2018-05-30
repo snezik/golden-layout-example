@@ -17,9 +17,15 @@ body {
 	color: white;
 	font-size: 20px;
 }
+.block-widget {
+	width: 60px;
+	height: 40px;
+	border: 1px solid black;
+	list-style: none;
+}
 /*.lm_header {*/
 	/*height: 50px !important;*/
-	/*background-color: red;*/
+	/*background-color: gray;*/
 /*}*/
 /*.lm_header .lm_tabs  .lm_tab .lm_title{*/
 	/*display: none;*/
