@@ -7,7 +7,16 @@ import {setState} from "../ActionCreator";
 export class TestComponent2 extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {date: new Date()};
+		this.state = {
+			date: new Date(),
+			data: [
+				{angle: 1, color: '#89DAC1', name: 'green', opacity: 0.2},
+				{angle: 2, color: '#F6D18A', name: 'yellow'},
+				{angle: 5, color: '#1E96BE', name: 'cyan'},
+				{angle: 3, color: '#DA70BF', name: 'magenta'},
+				{angle: 5, color: '#F6D18A', name: new Date().toLocaleTimeString()}
+			]
+		};
 	}
 	componentDidMount() {
 		this.timerID = setInterval(
@@ -18,6 +27,7 @@ export class TestComponent2 extends React.Component {
 	componentWillUnmount() {
 		clearInterval(this.timerID);
 	}
+
 	tick() {
 		this.setState({
 			date: new Date()
@@ -33,19 +43,14 @@ export class TestComponent2 extends React.Component {
 					colorRange={[0, 10]}
 					margin={{top: 100}}
 					getLabel={d => d.name}
-					data={[
-						{angle: 1, color: '#89DAC1', name: 'green', opacity: 0.2},
-						{angle: 2, color: '#F6D18A', name: 'yellow'},
-						{angle: 5, color: '#1E96BE', name: 'cyan'},
-						{angle: 3, color: '#DA70BF', name: 'magenta'},
-						{angle: 5, color: '#F6D18A', name: this.state.date.toLocaleTimeString()}
-					]}
+					data={this.state.data}
 					labelsRadiusMultiplier={1.1}
 					labelsStyle={{fontSize: 16, fill: '#222'}}
 					showLabels
 					style={{stroke: '#fff', strokeWidth: 2}}
 					width={400}
 					height={300} />
+				<button type="button" onClick={this.getFakeData}>Get fake data</button>
 			</div>
 
 			)
