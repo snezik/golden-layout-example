@@ -13,6 +13,7 @@ export  class TestComponent extends React.Component {
 		this.state = {
 			data: null
 		}
+		window.glEventHub.on('test-event', function(){console.log('TEST EVENT CALLED')});
 	}
 	componentDidMount(){
 		console.log('11');
@@ -45,7 +46,8 @@ export  class TestComponent extends React.Component {
 		fetch('https://jsonplaceholder.typicode.com/posts/1')
 			.then(response => response.json())
 			.then(json => {this.setState({data : json}); return json})
-			.then(json => console.log(json))
+			.then(json => console.log(json));
+		window.glEventHub.emit('test-event', {testData:'test data here'})
 	}
 	render() {
 		console.log('render');
