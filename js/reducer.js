@@ -1,7 +1,8 @@
 import {Map} from 'immutable';
 import {
 	incrementCount,
-	decrementCount
+	decrementCount,
+	changeTableTada
 } from './core';
 
 function setState(state, newState) {
@@ -16,6 +17,10 @@ export default function(state = Map(), action) {
 			return incrementCount(state);
 		case 'DECREMENT_COUNT':
 			return decrementCount(state);
+		case 'GET_NEW_DATA':
+			return changeTableTada(state);
+		case 'RECEIVE_POSTS':
+			return changeTableTada(state, action);
 	}
 	return state;
 }

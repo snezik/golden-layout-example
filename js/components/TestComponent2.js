@@ -36,6 +36,7 @@ export class TestComponent2 extends React.Component {
 	render() {
 		return (
 			<div>
+				<button onClick={() => this.props.incrementCount()}>Increment Count</button>
 				<p className="clock">Just count for test updating : {this.state.date.toLocaleTimeString()}</p>
 				<RadialChart
 					colorType={'literal'}
@@ -58,7 +59,7 @@ export class TestComponent2 extends React.Component {
 }
 
 TestComponent2.propTypes = {
-	label: PropTypes.string
+	incrementCount: PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {

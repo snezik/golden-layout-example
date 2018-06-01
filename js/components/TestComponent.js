@@ -1,26 +1,29 @@
 import React from 'react';
-import { getEventHub } from './GoldenLayoutWrapper';
-const a = getEventHub;
-debugger
+// import WrapperContext from './GoldenLayoutWrapper';
+import {connect} from 'react-redux';
+import {fetchPosts} from '../ActionCreator';
+import {getNewDataForTable} from '../ActionCreator'
+// import { getEventHub } from './GoldenLayoutWrapper';
+// const a = getEventHub;
 // const eventHub = getEventHub();
 
 import PropTypes from 'prop-types';
 // import {connect} from 'react-redux';
 
-export  class TestComponent extends React.Component {
+class TestComponent extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			data: null
-		}
-		window.glEventHub.on('test-event', function(){console.log('TEST EVENT CALLED')});
+			data: props.tableData
+		};
+		this.props.glEventHub.on('test-event', function(){console.log('TEST EVENT CALLED')});
 	}
 	componentDidMount(){
 		console.log('11');
-		fetch('https://jsonplaceholder.typicode.com/posts')
-			.then(response => response.json())
-			.then(json => {this.setState({data : json}); return json})
-			.then(json => console.log(json))
+		// fetch('https://jsonplaceholder.typicode.com/posts')
+		// 	.then(response => response.json())
+		// 	.then(json => {this.setState({data : json}); return json})
+		// 	.then(json => console.log(json))
 	}
 	generationRow(){
 		if(this.state.data && Array.isArray(this.state.data)) {
@@ -43,11 +46,12 @@ export  class TestComponent extends React.Component {
 	}
 	getFakeData(){
 		console.log('fake data');
-		fetch('https://jsonplaceholder.typicode.com/posts/1')
-			.then(response => response.json())
-			.then(json => {this.setState({data : json}); return json})
-			.then(json => console.log(json));
-		window.glEventHub.emit('test-event', {testData:'test data here'})
+		this.props.dispatch(fetchPosts());
+		// fetch('https://jsonplaceholder.typicode.com/posts/1')
+		// 	.then(response => response.json())
+		// 	.then(json => {this.setState({data : json}); return json})
+		// 	.then(json => console.log(json));
+		this.props.glEventHub.emit('test-event', {testData:'test data here'})
 	}
 	render() {
 		console.log('render');
@@ -75,17 +79,15 @@ export  class TestComponent extends React.Component {
 	}
 }
 
-// TestComponent.PropTypes = {
-// 	incrementCount: PropTypes.func.isRequired
-// };
+TestComponent.propTypes = {
+	label: PropTypes.number
+};
 
-// function mapDispatchToProps(dispatch) {
-// 	return {
-// 		incrementCount: () => dispatch(incrementCount())
-// 	};
-// }
-//
-// export const IncrementButtonContainer = connect(
-// 	null,
-// 	mapDispatchToProps
-// )(IncrementButton);
+ function mapStateToProps(state) {
+	return {
+		label: state['count'],
+		tableData : state.tableData
+	}
+}
+
+export const TestComponentConnected = connect(mapStateToProps)(TestComponent);

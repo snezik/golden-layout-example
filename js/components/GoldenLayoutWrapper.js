@@ -1,23 +1,21 @@
 import React from 'react';
 import {Provider} from 'react-redux';
+import {connect} from 'react-redux';
 import GoldenLayout from 'golden-layout';
 import {TestComponentContainer} from "./TestComponentContainer";
-import {TestComponent} from "./TestComponent";
+import {TestComponentConnected} from "./TestComponent";
 import {TestComponent2} from "./TestComponent2";
 import {TestComponent3} from "./TestComponent3";
-import createReactContext from 'react'
-import {connect} from 'react-redux';
-
-const ref = {glEventHub: null};
-
-export const WrapperContext = React.createContext({test:'test'});
+import PropTypes from 'prop-types';
 
 class GoldenLayoutWrapper extends React.Component {
-	constructor(props){
+	static contextTypes = {
+		store: PropTypes.object,
+	};
+	constructor(props, context){
 		super(props);
-		console.log('constructor');
+		console.log('constructor', context.store.getState());
 	}
-	// static tre = 'dsfdsfds';
 	componentDidMount() {
 		const config = {
 			settings: {
@@ -46,13 +44,13 @@ class GoldenLayoutWrapper extends React.Component {
 			}]
 		};
 
-		function wrapComponent(Component) {
+		function wrapComponent(Component, context) {
 			class Wrapped extends React.Component {
 				render() {
 					return (
-						<WrapperContext.Provider store = {this}>
+						<Provider store = {context}>
 							<Component {...this.props}/>
-						</WrapperContext.Provider>
+						</Provider>
 					);
 				}
 			}
@@ -68,21 +66,20 @@ class GoldenLayoutWrapper extends React.Component {
 		} else {
 			this.layout = new GoldenLayout( config, this.layouts );
 		}
-		console.log('init WRAPPER');
-		// this.layout = new GoldenLayout(config, this.layouts);
+
 		this.layout.registerComponent('TestComponentContainer',
-			wrapComponent(TestComponentContainer)
+			wrapComponent(TestComponentContainer, this.context.store)
 		);
-		this.layout.registerComponent('TestComponent',
-			wrapComponent(TestComponent)
+		this.layout.registerComponent('TestComponentConnected',
+			wrapComponent(TestComponentConnected, this.context.store)
 		);
 		this.layout.registerComponent('TestComponent2',
-			wrapComponent(TestComponent2,)
+			wrapComponent(TestComponent2, this.context.store)
 		);
 		this.layout.registerComponent('TestComponent3',
-			wrapComponent(TestComponent3)
+			wrapComponent(TestComponent3, this.context.store)
 		);
-		window.glEventHub = this.layout.eventHub;
+		// window.glEventHub = this.layout.eventHub;
 		this.layout.init();
 
 		function addMenuItem(text, layout, ComponentName) {
@@ -96,52 +93,13 @@ class GoldenLayoutWrapper extends React.Component {
 			};
 			layout.createDragSource( el, newItemConfig );
 		}
-		// this.layout.on('stackCreated', (stack)=> {
-		// 	let label = 'custom open at new window';
-		//
-		// 	let popout = function() {
-		//
-		// 		let item = stack.header.activeContentItem;
-		//
-		// 		let parentId = stack.parent.config.id;
-		// 		let indexInParent = stack.contentItems.findIndex(e => e.config.id == item.config.id);
-		//
-		// 		stack.removeChild( item, true );
-		//
-		// 		console.log(this);
-		//
-		// 		// display_popup(item, parentId, indexInParent, stack);
-		//
-		//
-		// 	};
-		//
-		//
-		// 	new GoldenLayout.__lm.controls.HeaderButton( stack.header, label, 'lm_popout', popout );
-		// 	let ctrlsCtr = stack.header.controlsContainer[0];
-		// 	let openWinIcon = ctrlsCtr.lastChild;
-		// 	$(openWinIcon).insertBefore(ctrlsCtr.firstChild);
-		// }, this);
-		// function display_popup(item, parentId, indexInParent, stack){
-		// 	this.layout.createPopout(
-		// 		{
-		// 			type: 'react-component',
-		// 			componentName: 'TestComponent2',
-		// 			props: { label: 'B' },
-		// 			componentState: { text: 'Component 2' }
-		// 		}, {
-		// 			width: 800,
-		// 			height: 800,
-		// 			left: 400,
-		// 			top: 100
-		// 		}
-		// 	);
-		// }
+
 		this.layout.on('stateChanged', (e) => {
-			// console.log(this.layout.toConfig())
+			// TODO need write method to update layout size
 		});
 
 		addMenuItem( 'Add pie chart', this.layout, 'TestComponent2' );
-		addMenuItem( 'Add table', this.layout, 'TestComponent' );
+		addMenuItem( 'Add table', this.layout, 'TestComponentConnected' );
 	}
 
 	popupCreated() {
@@ -149,7 +107,7 @@ class GoldenLayoutWrapper extends React.Component {
 			{
 				type: 'react-component',
 				title: 'super title',
-				component: 'TestComponent',
+				component: 'TestComponentConnected',
 				props: { label: 'B' },
 			}, {
 				width: 800,
@@ -166,8 +124,9 @@ class GoldenLayoutWrapper extends React.Component {
 
 	}
 	render(){
-			const {store} = this.props;
-			return (
+		const {store} = this.props;
+		console.log(store);
+		return (
 				<div className="container">
 					<ul id="menuContainer"></ul>
 					<button onClick={this.saveStatus.bind(this)}>Save layout</button>
@@ -178,18 +137,16 @@ class GoldenLayoutWrapper extends React.Component {
 			);
 		}
 };
-// GoldenLayoutWrapper.contextTypes = {
-// 	store: React.PropTypes.object
-// };
+
+GoldenLayoutWrapper.propsTypes = {
+	store: PropTypes.object
+};
+
 function mapStateToProps(state) {
 	return {
 		store: state
 	}
 }
-export const getEventHub = ()=> {
-	debugger
-	// return GoldenLayoutWrapper.tre;
-	return  ref.glEventHub;
-};
-export default GoldenLayoutWrapper = connect(mapStateToProps)(GoldenLayoutWrapper);
+
+export const GoldenLayoutWrapperConnected = connect(mapStateToProps)(GoldenLayoutWrapper);
 // export default GoldenLayoutWrapper
