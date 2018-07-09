@@ -8,5 +8,6 @@ npm-debug.log
 .DS_Store
 
 # Docker
+.idea
 Dockerfile
 docker-compose.yml

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/snezik/golden-layout-example#readme",
   "dependencies": {
+    "core-js": "^2.5.7",
     "golden-layout": "^1.5.9",
     "immutable": "^3.8.2",
     "prop-types": "^15.6.1",
